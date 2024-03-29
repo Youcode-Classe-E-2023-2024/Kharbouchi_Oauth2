@@ -42,4 +42,17 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+    public function groups()
+    {
+        return $this->belongsToMany(Group::class);
+    }
+    public function hasPermission($permissionName)
+    {
+        foreach ($this->groups as $group) {
+            if ($group->permissions->contains('name', $permissionName)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
